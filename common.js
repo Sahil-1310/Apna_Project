@@ -1,5 +1,0 @@
-class commonFunction {
-    async otpGenerate() {
-        
-    }
-}

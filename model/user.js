@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import validator from 'mongoose-validator'
 import bcryptjs from 'bcryptjs'
-
 const Schema = mongoose.Schema;
+
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const userSchema = new Schema({
@@ -20,7 +20,12 @@ const userSchema = new Schema({
     },
     phone: {
         type: Number,
+        maxlength: 10,
+        minlength: 10,
         default: null
+    },
+    countryCode: {
+        type: String,
     },
     password: {
         type: String,
@@ -33,18 +38,25 @@ const userSchema = new Schema({
         type: String,
         lowercase: true,
         trim: true,
-        validate: [
-            validator({
-                validator: 'isEmail',
-                message: 'Oops..please enter valid email'
-            })
-        ],
-        default: null
+        default: ''
+    },
+    facebookId: {
+        type: String,
+        default: "",
+        select: false,
+    },
+    googleId: {
+        type: String,
+        default: "",
+        select: false,
+    },
+    isSocialRegister: {
+        type: Number,
+        default: 0,
     },
     deviceType: {
-        type: Number,
-        enum: [constant.DEVICE_TYPE.WEB, constant.DEVICE_TYPE.ANDROID, constant.DEVICE_TYPE.IOS],
-        default: null
+        type: String,
+        select: false,
     },
     deviceToken: {
         type: String,
@@ -71,13 +83,45 @@ const userSchema = new Schema({
     toObject: { virtuals: true }
 });
 
+userSchema.path("email").validate((value, done) => {
+    if (!value) return true;
+    let qry = { email: value.toLowerCase() };
+    return mongoose
+        .model("user")
+        .countDocuments(qry)
+        .exec()
+        .then(function (count) {
+            return !count;
+        })
+        .catch(function (err) {
+            throw err;
+        });
+}, "This Email Already Exist")
+
+userSchema.path("phone").validate(function (value, done) {
+    if (!value) return true;
+    let qry = { phone: value, countryCode: this.countryCode };
+
+    return mongoose
+        .model("user")
+        .countDocuments(qry)
+        .exec()
+        .then(function (count) {
+            return !count;
+        })
+        .catch(function (err) {
+            throw err;
+        });
+}, "This Number Already Exist");
+
 userSchema.pre('save', function (next) {
     if (this.isModified('password')) {
         const salt = bcryptjs.genSaltSync(10)
         this.password = bcryptjs.hashSync(this.password, salt)
-        return next()
+        return next()   // If you are creating the new document then just return next() middleware.
     }
 })
+
 userSchema.static('hashPassword', (password) => {
     if (password) {
         const salt = bcryptjs.genSaltSync(10)
@@ -90,5 +134,5 @@ userSchema.static('verifyPassword', (password, hash) => {
         return bcryptjs.compareSync(password, hash)
     }
 });
-const user = mongoose.model('user', userSchema)
-export default user;
+
+module.exports = mongoose.model('user', userSchema)
