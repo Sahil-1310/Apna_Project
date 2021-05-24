@@ -1,10 +1,8 @@
 require('util').inspect.defaultOptions.depth = null
-const twilo = require('twilio')(process.env.accountSid, process.env.authToken, {
-    lazyLoading: true
-});
+const twilo = require('twilio')(process.env.accountSid, process.env.authToken);
 
-class basicFunction {
-    async sendSms(payload) {
+module.exports = {
+    sendSms: async (payload) => {
         return await twilo.messages.create({
             body: payload.message,
             from: process.env.phonenumber,
@@ -16,4 +14,3 @@ class basicFunction {
         })
     }
 }
-export default basicFunction;

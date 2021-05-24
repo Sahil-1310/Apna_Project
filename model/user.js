@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+    import mongoose from 'mongoose';
 import validator from 'mongoose-validator'
 import bcryptjs from 'bcryptjs'
 const Schema = mongoose.Schema;
@@ -92,21 +92,13 @@ userSchema.path("email").validate((value, done) => {
         });
 }, "This Email Already Exist")
 
-userSchema.path("phone").validate(function (value, done) {
-    if (!value) return true;
-    let qry = { phone: value, countryCode: this.countryCode };
+userSchema.static('findByPhone', async (value) =>{
+    let qry = { phone: value.phone, countryCode: value.countryCode};
 
-    return mongoose
-        .model("user")
-        .countDocuments(qry)
-        .exec()
-        .then(function (count) {
-            return !count;
-        })
-        .catch(function (err) {
-            throw err;
-        });
-}, "This Number Already Exist");
+    const result = await mongoose.model("user").countDocuments(qry)
+    if(result >= 1) return true;
+    else return false;
+})
 
 userSchema.pre('save', function (next) {
     if (this.isModified('password')) {

@@ -1,11 +1,8 @@
 import Responses from '../Responses/Responses'
 import CommonFunction from '../commonFunctions'
+import responseHandling from '../Responses/errorHandling'
 import utils from '../util/index'
 import Schema from '../model/index'
-import { Error } from 'mongoose';
-
-// objects of class
-const util = new utils();
 const commonFunction = new CommonFunction;
 class userService {
    async SignUp(req, res) {
@@ -18,22 +15,26 @@ class userService {
             }
          }
          if (data.phone && data.countryCode) {
+            const isExist = await Schema.user.findByPhone(data);
+            if (isExist == true) throw new Error("This Phone Already Exist")
+
             let otp = commonFunction.otpGenerate();
+
             const payload = {
                message: `${otp} is your OTP. Do not share it with anyone.`,
                phone: data.countryCode + data.phone
             }
-            return await util.sendSms(payload) === 'queued' ? await Schema.user.create(data).then(async res => {
+
+            return await utils.basicFunction.sendSms(payload) === 'queued' ? await Schema.user.create(data).then(async res => {
                return {
                   status: true,
                   otp: otp,
                   result: res,
                }
-            }).catch(err => { throw new Error(err) }) : "The 'To' number  is not a valid phone number"
+            }).catch(err => { throw err }) :  {status: false, message: "The 'To' number  is not a valid phone number"}
          }
       } catch (error) {
-         
-         throw new Error(error);
+         throw error
       }
    }
 }

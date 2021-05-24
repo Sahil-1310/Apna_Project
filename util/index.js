@@ -1,9 +1,4 @@
-import basicFunctopm from './basicFunction';
 
-class Index extends basicFunctopm{
-
-
-
-    
+module.exports = {
+    basicFunction : require('./basicFunction')
 }
-export default Index;
