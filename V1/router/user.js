@@ -6,3 +6,4 @@ const userRoutes = express.Router();
 userRoutes.route("/signUp").post(userController__.signUp)
 
 export default userRoutes
+ 

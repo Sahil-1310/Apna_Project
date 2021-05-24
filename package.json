@@ -1,5 +1,5 @@
 {
-  "name": "onBording",
+  "name": "own_project",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -16,11 +16,14 @@
     "cors": "^2.8.5",
     "dotenv": "^8.4.0",
     "express": "^4.17.1",
+    "fast2sms": "^1.0.3",
     "fcm": "^1.0.3",
     "mongoose": "^5.12.7",
     "mongoose-validator": "^2.1.0",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.7"
+    "nodemon": "^2.0.7",
+    "twilio": "^3.63.0",
+    "util": "^0.12.3"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",

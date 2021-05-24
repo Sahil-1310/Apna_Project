@@ -1,5 +1,5 @@
 class commonFunction {
-    async otpGenerate(){
+    otpGenerate(){
         let value = ''
         for(var i = 0; i < 4; i++){
             const randValue = Math.floor((Math.random() * 10) % 10);

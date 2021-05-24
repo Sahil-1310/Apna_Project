@@ -6,9 +6,7 @@ const Schema = mongoose.Schema;
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const userSchema = new Schema({
-    fname: {
-        type: String
-    },
+    fname: String,
     lname: String,
     username: String,
     dob: {
@@ -19,7 +17,7 @@ const userSchema = new Schema({
         enum: ["Male", "Female", "Other"]
     },
     phone: {
-        type: Number,
+        type: String,
         maxlength: 10,
         minlength: 10,
         default: null
@@ -53,10 +51,6 @@ const userSchema = new Schema({
     isSocialRegister: {
         type: Number,
         default: 0,
-    },
-    deviceType: {
-        type: String,
-        select: false,
     },
     deviceToken: {
         type: String,

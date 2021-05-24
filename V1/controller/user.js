@@ -6,7 +6,7 @@ class userController {
             const result = await userService__.SignUp(req, null);
             res.json(result);
         } catch (error) {
-            console.log(error)
+            res.json(error)
         }
     }
 }
