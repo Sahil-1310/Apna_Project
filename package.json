@@ -18,6 +18,8 @@
     "express": "^4.17.1",
     "fast2sms": "^1.0.3",
     "fcm": "^1.0.3",
+    "joi": "^17.4.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.7",
     "mongoose-validator": "^2.1.0",
     "morgan": "^1.10.0",

@@ -1,4 +1,4 @@
-    import mongoose from 'mongoose';
+import mongoose from 'mongoose';
 import validator from 'mongoose-validator'
 import bcryptjs from 'bcryptjs'
 const Schema = mongoose.Schema;
@@ -30,12 +30,14 @@ const userSchema = new Schema({
         minlength: 6,
         maxlength: 16,
         trim: true,
-        required: true
+        required: true,
+        select: true
     },
     email: {
         type: String,
         lowercase: true,
         trim: true,
+        unique: true,
         default: ''
     },
     facebookId: {
@@ -77,26 +79,17 @@ const userSchema = new Schema({
     toObject: { virtuals: true }
 });
 
-userSchema.path("email").validate((value, done) => {
-    if (!value) return true;
-    let qry = { email: value.toLowerCase() };
-    return mongoose
-        .model("user")
-        .countDocuments(qry)
-        .exec()
-        .then(function (count) {
-            return !count;
-        })
-        .catch(function (err) {
-            throw err;
-        });
-}, "This Email Already Exist")
-
-userSchema.static('findByPhone', async (value) =>{
-    let qry = { phone: value.phone, countryCode: value.countryCode};
-
+userSchema.static('findByEmail', async (value) => {
+    let qry = { email: value.email };
     const result = await mongoose.model("user").countDocuments(qry)
-    if(result >= 1) return true;
+    if (result >= 1) return true;
+    else return false;
+})
+
+userSchema.static('findByPhone', async (value) => {
+    let qry = { phone: value.phone, countryCode: value.countryCode };
+    const result = await mongoose.model("user").countDocuments(qry)
+    if (result >= 1) return true;
     else return false;
 })
 

@@ -1,24 +1,24 @@
-
 class ResponseHnadling {
-
     static sendSuccess(res, message, code, data) {
         const responseObject = {
-            code: code || 200,
+            status: true,
             message: message || 'success',
             data: data || {}
         }
-        res.send(responseObject)
+        let statuscode = code || 200;
+        res.status(statuscode).json(responseObject)
     }
-    static sendError (res, message, code, data){
+    static sendError(res, message, code, data) {
         const responseObject = {
-            code: code || 400,
+            status: false,
             message: message || 'error',
             data: data || {}
         }
-        res.status(responseObject.code).json(responseObject)
+        let statuscode = code || 400;
+        res.status(statuscode).json(responseObject)
     }
 
-    static sendWrong (res, message, code, data){
+    static sendWrong(res, message, code, data) {
         const responseObject = {
             code: code || 500,
             message: message || 'something went wrong',
@@ -27,5 +27,4 @@ class ResponseHnadling {
         res.send(responseObject)
     }
 }
-
 export default ResponseHnadling;

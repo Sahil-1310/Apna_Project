@@ -1,8 +1,8 @@
+require('dotenv').config();
+require('./connection/connect');
 import express from 'express';
 import morgan from 'morgan';
 import cors from "cors";
-require('dotenv').config();
-require('./connection/connect');
 const v1 = require('./V1/router/index')
 const app = express();
 app.use(express.json());
